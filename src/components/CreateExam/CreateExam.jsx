@@ -12,61 +12,74 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 function CreateExam() {
 
-    const [item, setItem] = useState([])
+    // const [state, setState] = useState({
+    //     data: {
+    //         subjectName: "",
+    //         questions: [{ question: "questionq", answer: "answer", options: ["sdf", "sdf", "sdf", "sdf"] }],
+    //         "notes": [
+    //             "10mins exam",
+    //             "start time 10am"
+    //         ]
+    //     }
+    // })
+
+    // const jjj = (e) => {
+    //     e.preventDefault()
+    //     setState(prevState => ({
+    //         data: { ...prevState.data, questions: [...prevState.data.questions, { question: e.target.value, answer: e.target.value, options: ["an1", "ans3", "ans2", "ans3"] }] }
+    //     }))
+    //     console.log(state?.data)
+    // }
+
+
+    // const handleSubmit = e => {
+    //     e.preventDefault()
+    //     console.log(state)
+    // }
+
+    // const handleChange = e => {
+    //     // setState({ ...state, [e.target.name]: e.target.value })
+    //     setState([...state, { [e.target.name]: e.target.value }])
+    // }
 
     const { config } = useContext(DataContext)
+
+    const [item, setItem] = useState([
+        {
+            question: "",
+            answer: "",
+            options: []
+        }
+    ])
+
 
     const [exam, setExam] = useState({
         subjectName: "",
         questions: [
-            {
-                question: "",
-                answer: "",
-                options: ["", "", "", ""]
-            }
+
         ], notes: [
-            "",
             ""
         ]
     })
 
     const addItem = () => {
         setItem([...item, {
-            question: "asd",
+            question: "sdf",
             answer: "asd",
-            options: ["asd", "asd", "asd", "asd"]
+            options: []
         }])
-        exam?.questions?.push(item)
-        setExam({ ...exam })
-        console.log(exam)
+        // exam?.questions?.push({ question: item[0].question, answer: item[0].answer, options: ["df", "sdf", "sdf", "sdff"] })
+
     };
 
-
-    const [state, setState] = useState({
-        data: {
-            subjectName: "",
-            questions: [{ question: "questionq", answer: "answer", options: ["sdf", "sdf", "sdf", "sdf"] }],
-            "notes": [
-                "10mins exam",
-                "start time 10am"
-            ]
-        }
-    })
-
-    const jjj = (e) => {
-        e.preventDefault()
-        setState(prevState => ({
-            data: { ...prevState.data, questions: [...prevState.data.questions, { question: e.target.value, answer: e.target.value, options: ["an1", "ans3", "ans2", "ans3"] }] }
-        }))
-        console.log(state?.data)
-    }
+    const [value, setValue] = useState("")
 
     const handleChangee = (event) => {
         setValue(event.target.value);
         console.log(value)
     };
 
-    const onSubmit = (e) => {
+    const submitExam = (e) => {
         debugger
         e.preventDefault();
         axios.post("https://nodejsexamination.herokuapp.com/dashboard/Teachers/Exam", exam, config)
@@ -78,34 +91,40 @@ function CreateExam() {
         console.log(exam)
     }
 
-    const handleSubmit = e => {
+    const [index, setIndex] = useState(1)
+
+    const nextQuestion = (e) => {
         e.preventDefault()
-        console.log(state)
+        const que = item[0].question
+        const ans = item[0].answer
+        exam?.questions?.push({ question: que, answer: ans, options: [item[0].options[1], item[0].options[2], item[0].options[3], item[0].options[4]] })
+        // document.questions.reset()
+        console.log(exam)
+        const length = exam?.questions.length + 1
+        setIndex(length)
+        console.log(index)
+    }
+
+
+    const reset = () => {
+        document.questions.reset()
+        document.subject.reset()
     }
 
     const handleChange = e => {
-        // setState({ ...state, [e.target.name]: e.target.value })
-        setState([...state, { [e.target.name]: e.target.value }])
+        setItem({ ...item, [e.target.name]: e.target.value })
+        console.log(item)
     }
-
-    const usePreviousValue = value => {
-        const ref = useRef();
-        useEffect(() => {
-            ref.current = value;
-        });
-        return ref.current;
-    };
-
-    const [value, setValue] = useState("")
-    const prevValue = usePreviousValue(value)
 
     return (
         <div>
-            <button onClick={addItem} >Add</button>
+            {/* <button onClick={addItem} >Add</button> */}
             <h1>Create Exam</h1>
-            {JSON.stringify(exam)}
-            <br /><br />
-            <form action="" onSubmit={onSubmit}  >
+            <b>Question : - {index} </b>
+            <br />
+            {/* {JSON.stringify(value)} */}
+            {/* {JSON.stringify(exam)} */}
+            <form name="subject" >
                 <label htmlFor="">Subject Name :</label>
                 <select onChange={(e) => setExam((prevState) => {
                     exam.subjectName = e.target.value;
@@ -115,13 +134,22 @@ function CreateExam() {
                     })
                 }
                 )} >
-                    <option value="React 0000">React 0000</option>
-                    <option value="React 1000">React 1000</option>
-                    <option value="React 2000">React 2000</option>
-                    <option value="React 3000">React 3000</option>
-                </select>
-                <br /><br />
-                <label htmlFor="">Questions :</label>
+                    <option value="Marathi 123">Marathi 123</option>
+                    <option value="Marathi 222">Marathi 222</option>
+                    <option value="Marathi 333">Marathi 333</option>
+                    <option value="Marathi 444">Marathi 444</option>
+                    <option value="Marathi 555">Marathi 555</option>
+                </select><br /><br />
+                <label htmlFor="">Notes :</label>
+                <input onChange={(e) => setExam((prevState) => {
+                    exam.notes[0] = e.target.value;
+                    console.log(prevState)
+                    return ({
+                        ...prevState
+                    })
+                }
+                )} />
+                {/* <label htmlFor="">Questions :</label>
                 <input type="text" name="question" onChange={(e) => setExam((prevState) => {
                     exam.questions[0].question = e.target.value;
                     console.log(prevState)
@@ -139,7 +167,7 @@ function CreateExam() {
                         ...prevState
                     })
                 }
-                )} />
+                )} /> */}
                 <br /><br />
                 {/* <label htmlFor="">Options :</label> */}
                 {/* <>
@@ -179,14 +207,14 @@ function CreateExam() {
                 </> */}
                 {/* <FormControl component="fieldset">
                     <FormLabel component="legend">Options</FormLabel>
-                    <RadioGroup  value={value} onChange={handleChangee}>
+                    <RadioGroup value={value} onChange={handleChangee}>
                         <FormControlLabel value="Option 1" control={<Radio />} label="Option 1" />
                         <FormControlLabel value="Option 2" control={<Radio />} label="Option 2" />
                         <FormControlLabel value="Option 3" control={<Radio />} label="Option 3" />
                         <FormControlLabel value="Option 4" control={<Radio />} label="Option 4" />
                     </RadioGroup>
                 </FormControl> */}
-                <FormControl component="fieldset">
+                {/* <FormControl component="fieldset">
                     <FormLabel component="legend">Options</FormLabel>
                     <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChangee}>
                         <FormControlLabel value="Option 1" control={<Radio />} label="Option 1" />
@@ -194,14 +222,87 @@ function CreateExam() {
                         <FormControlLabel value="Option 3" control={<Radio />} label="Option 3" />
                         <FormControlLabel value="Option 4" control={<Radio />} label="Option 4" />
                     </RadioGroup>
+                </FormControl> */}
+                {/* {JSON.stringify(value)} */}
+            </form>
+            <form name="questions" >
+                <label htmlFor="">Question :</label>
+                <input type="text" onChange={(e) => setItem((prevState) => {
+                    item[0].question = e.target.value
+                    console.log(prevState)
+                    return ({
+                        ...prevState
+                    })
+                })} />
+                <br /><br />
+                <label htmlFor="">Answer :</label>
+                <input type="text" onChange={(e) => setItem((prevState) => {
+                    item[0].answer = e.target.value
+                    console.log(prevState)
+                    return ({
+                        ...prevState
+                    })
+                })} readOnly />
+                <br /><br />
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">Options</FormLabel>
+                    <RadioGroup value={value} onChange={handleChangee} >
+                        <div>
+                            <FormControlLabel value="Option1" control={<Radio />} onChange={(e) => setItem((prevState) => {
+                                item[0].options[1] = e.target.value;
+                                console.log(prevState)
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /> <input type="text" name="option1" onChange={(e) => setItem((prevState) => {
+                                item[0].options[1] = e.target.value;
+                                console.log(prevState)
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /><br />
+                        </div>
+                        <div>
+                            <FormControlLabel value="Option2" control={<Radio />} /> <input type="text" name="option2" onChange={(e) => setItem((prevState) => {
+                                item[0].options[2] = e.target.value;
+                                console.log(prevState)
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /><br />
+                        </div>
+                        <div>
+                            <FormControlLabel value="Option3" control={<Radio />} /> <input type="text" name="option3" onChange={(e) => setItem((prevState) => {
+                                item[0].options[3] = e.target.value;
+                                console.log(prevState)
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /><br />
+                        </div>
+                        <div>
+                            <FormControlLabel value="Option4" control={<Radio />} /> <input type="text" name="option4" onChange={(e) => setItem((prevState) => {
+                                item[0].options[4] = e.target.value;
+                                console.log(prevState)
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /><br />
+                        </div>
+                    </RadioGroup>
                 </FormControl>
                 <br /><br />
-                {JSON.stringify(value)}
-                <br /><br />
-                <input style={{ marginRight: "10px" }} className="btn btn-primary" type="button" value="Previous Question" />
-                <input className="btn btn-primary" type="button" value="Next Question" /><br /><br />
-                <input className="btn btn-primary" type="submit" value="Submit Exam" />
+                {/* <input className="btn btn-primary" type="button" value="Previous Question" /><br /><br /> */}
+                <input className="btn btn-primary" type="button" onClick={nextQuestion} value="Next Question" /><br /><br />
+                <input className="btn btn-primary" type="button" value="reset" onClick={reset} /><br /><br />
+                <input className="btn btn-primary" type="submit" onClick={submitExam} value="Submit Exam" />
             </form>
+
         </div>
     )
 }
