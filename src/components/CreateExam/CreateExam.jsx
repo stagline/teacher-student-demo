@@ -76,7 +76,7 @@ function CreateExam() {
 
     const handleChangee = (event) => {
         setValue(event.target.value);
-        console.log(value)
+        // console.log(value)
     };
 
     const submitExam = (e) => {
@@ -236,7 +236,7 @@ function CreateExam() {
                 })} />
                 <br /><br />
                 <label htmlFor="">Answer :</label>
-                <input type="text" onChange={(e) => setItem((prevState) => {
+                <input type="text" value="" onChange={(e) => setItem((prevState) => {
                     item[0].answer = e.target.value
                     console.log(prevState)
                     return ({
@@ -248,9 +248,9 @@ function CreateExam() {
                     <FormLabel component="legend">Options</FormLabel>
                     <RadioGroup value={value} onChange={handleChangee} >
                         <div>
-                            <FormControlLabel value="Option1" control={<Radio />} onChange={(e) => setItem((prevState) => {
+                            <FormControlLabel value={item[0].options[1]} control={<Radio />} onChange={(e) => setItem((prevState) => {
                                 item[0].options[1] = e.target.value;
-                                console.log(prevState)
+                                console.log(prevState[0].options[1])
                                 return ({
                                     ...prevState
                                 })
@@ -265,7 +265,14 @@ function CreateExam() {
                             )} /><br />
                         </div>
                         <div>
-                            <FormControlLabel value="Option2" control={<Radio />} /> <input type="text" name="option2" onChange={(e) => setItem((prevState) => {
+                            <FormControlLabel value={item[0].options[2]} control={<Radio />} onChange={(e) => setItem((prevState) => {
+                                item[0].options[2] = e.target.value;
+                                console.log(prevState[0].options[2])
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /> <input type="text" name="option2" onChange={(e) => setItem((prevState) => {
                                 item[0].options[2] = e.target.value;
                                 console.log(prevState)
                                 return ({
@@ -275,7 +282,14 @@ function CreateExam() {
                             )} /><br />
                         </div>
                         <div>
-                            <FormControlLabel value="Option3" control={<Radio />} /> <input type="text" name="option3" onChange={(e) => setItem((prevState) => {
+                            <FormControlLabel value={item[0].options[3]} control={<Radio />} onChange={(e) => setItem((prevState) => {
+                                item[0].options[3] = e.target.value;
+                                console.log(prevState[0].options[3])
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /> <input type="text" name="option3" onChange={(e) => setItem((prevState) => {
                                 item[0].options[3] = e.target.value;
                                 console.log(prevState)
                                 return ({
@@ -285,7 +299,14 @@ function CreateExam() {
                             )} /><br />
                         </div>
                         <div>
-                            <FormControlLabel value="Option4" control={<Radio />} /> <input type="text" name="option4" onChange={(e) => setItem((prevState) => {
+                            <FormControlLabel value={item[0].options[4]} control={<Radio />} onChange={(e) => setItem((prevState) => {
+                                item[0].options[4] = e.target.value;
+                                console.log(prevState[0].options[4])
+                                return ({
+                                    ...prevState
+                                })
+                            }
+                            )} /> <input type="text" name="option4" onChange={(e) => setItem((prevState) => {
                                 item[0].options[4] = e.target.value;
                                 console.log(prevState)
                                 return ({
