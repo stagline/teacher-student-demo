@@ -1,0 +1,22 @@
+// let a = 10;
+// let func1 = () => {
+//    let a = 15
+//     console.log(a);
+// }
+
+// let func2 = () => {
+// console.log(a)
+//     let a = 20
+//     console.log(a);
+// }
+// func2()
+// func1()
+
+// let array = [2,2,4]
+// console.log(array.findIndex((elem)=> elem==4));
+let fruit = "mango";
+
+  let fruit = "orange";
+  console.log(fruit);
+
+console.log(fruit);
