@@ -60,6 +60,29 @@ function CreateExam() {
     },
   ]);
 
+  const [checkk, setCheckk] = useState([]);
+
+  const check = () => {
+    const que = item[0].question;
+    let options = [
+      item[0].options[1],
+      item[0].options[2],
+      item[0].options[3],
+      item[0].options[4],
+    ];
+    let optionsWithNoDuplicates = Object.keys(
+      options.reduce((a, c) => ({ ...a, [c]: (a[c] || 0) + 1 }), {})
+    );
+
+    const newQuestion = {
+      question: que,
+      answer: value,
+      options: optionsWithNoDuplicates,
+    };
+    setCheckk([...checkk, newQuestion]);
+    console.log(checkk)
+  };
+
   const handleChangee = (event) => {
     setValue(event.target.value);
   };
@@ -162,6 +185,7 @@ function CreateExam() {
 
   return (
     <div>
+      <button onClick={check}>check</button>
       <h1>Create Exam</h1>
       <b>Question : - {index} </b>
       <br />

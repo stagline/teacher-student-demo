@@ -8,8 +8,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import axios from "axios";
 
 function ExamNew() {
-  // romoxo8760@flipssl.com
-  // pass 123456789
   const { config } = useContext(DataContext);
 
   const [exam, setExam] = useState({
@@ -24,11 +22,11 @@ function ExamNew() {
     notes: [],
   });
 
-  const [index, setIndex] = useState(exam.questions.length);
+  const [index, setIndex] = useState(exam?.questions?.length);
 
   const [value, setValue] = useState("");
 
-  const handleChangee = (event) => {
+  const handleChange = (event) => {
     setValue(event.target.value);
   };
 
@@ -39,6 +37,7 @@ function ExamNew() {
 
   const submitExam = (e) => {
     e.preventDefault();
+    exam.questions.shift();
     axios
       .post(
         "https://nodejsexamination.herokuapp.com/dashboard/Teachers/Exam",
@@ -46,7 +45,7 @@ function ExamNew() {
         config
       )
       .then((response) => {
-        setExam({ response });
+        setExam({ ...exam, response });
         alert("Exam Created Successfully!");
         console.log(response);
       });
@@ -55,6 +54,7 @@ function ExamNew() {
 
   const nextQuestion = () => {
     const que = exam.questions[0].question;
+    const ans = exam.questions[0].answer;
 
     const examQuestionValues = Object.values(exam?.questions).map(
       (ques) => ques.question
@@ -64,26 +64,22 @@ function ExamNew() {
     const questionWithNoDuplicates = examQuestionValues.includes(que);
     console.log(questionWithNoDuplicates, "Question With no Duplicates Values");
 
-    let options = [
-      exam.questions[0].options[0],
-      exam.questions[0].options[1],
-      exam.questions[0].options[2],
-      exam.questions[0].options[3],
-    ];
+    let options = [g[0], g[1], g[2], g[3]];
     let optionsWithNoDuplicates = Object.keys(
       options.reduce((a, c) => ({ ...a, [c]: (a[c] || 0) + 1 }), {})
     );
 
+    console.log(value, "value name");
     const newQuestion = {
       question: que,
-      answer: value,
+      answer: ans,
       options: optionsWithNoDuplicates,
     };
-
     if (newQuestion.options.length === 4) {
       setExam((prevState) => ({
+        // ...exam,
         subjectName: exam.subjectName,
-        questions: [...prevState.questions, newQuestion],
+        questions: [newQuestion, ...prevState.questions],
         notes: exam.notes,
       }));
     } else {
@@ -121,9 +117,11 @@ function ExamNew() {
     document.examForm.reset();
   };
 
+  const g = exam?.questions[0]?.options?.map((i) => i);
   return (
     <div>
-      <p>{`Question:- ${index}`}</p>
+      {/* <p>{`Question:- ${index}`}</p> */}
+      <br />
       <form name="examForm">
         <div>
           <div>
@@ -163,7 +161,6 @@ function ExamNew() {
             />
           </div>
           <label>Question</label>
-          {/* {...exam,questions:[{...exam.questions[index-1],question:e.target.value}],} */}
           <input
             type="text"
             onChange={(e) =>
@@ -171,7 +168,6 @@ function ExamNew() {
                 exam.questions[0].question = e.target.value;
                 console.log(prevState);
                 return {
-                  // ...exam,
                   ...prevState,
                 };
               })
@@ -182,29 +178,32 @@ function ExamNew() {
           <label>Answer:</label>
           <input
             type="text"
-            id="answer"
-            value={exam.questions[0].options.length >= 1 ? value : ""}
-            disabled
+            onChange={(e) =>
+              setExam((prevState) => {
+                exam.questions[0].answer = e.target.value;
+                console.log(prevState);
+                return {
+                  ...prevState,
+                };
+              })
+            }
+            // value={value}
           />
         </div>
         <div>
           <FormControl component="fieldset">
             <FormLabel component="legend">Options</FormLabel>
-            <RadioGroup value={value} onChange={handleChangee}>
+            <RadioGroup value={value} onChange={handleChange}>
               <div>
                 <FormControlLabel
-                  disabled={
-                    !exam.questions[0].options[0]?.length > 0 &&
-                    exam.questions[0].options[0].length === 0
-                  }
-                  value={exam.questions[0].options[0]}
+                  disabled={!g[0].length > 0}
+                  value={g[0]}
                   control={<Radio />}
                   onChange={(e) =>
                     setExam((prevState) => {
-                      exam.questions[0].options[0] = e.target.value;
+                      g[0] = e.target.value;
                       console.log(prevState);
                       return {
-                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -218,7 +217,6 @@ function ExamNew() {
                       exam.questions[0].options[0] = e.target.value;
                       console.log(prevState);
                       return {
-                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -228,15 +226,14 @@ function ExamNew() {
               </div>
               <div>
                 <FormControlLabel
-                  disabled={!exam.questions[0].options[1]?.length > 0}
-                  value={exam.questions[0].options[1]}
+                  disabled={!g[1].length > 0}
+                  value={g[1]}
                   control={<Radio />}
                   onChange={(e) =>
                     setExam((prevState) => {
-                      exam.questions[0].options[1] = e.target.value;
-                      console.log(exam.questions[0].options[1]);
+                      g[1] = e.target.value;
+                      console.log(g[1]);
                       return {
-                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -260,12 +257,12 @@ function ExamNew() {
               </div>
               <div>
                 <FormControlLabel
-                  disabled={!exam.questions[0].options[2]?.length > 0}
-                  value={exam.questions[0].options[2]}
+                  disabled={!g[2].length > 0}
+                  value={g[2]}
                   control={<Radio />}
                   onChange={(e) =>
                     setExam((prevState) => {
-                      exam.questions[0].options[2] = e.target.value;
+                      g[2] = e.target.value;
                       console.log(prevState);
                       return {
                         // ...exam,
@@ -292,12 +289,12 @@ function ExamNew() {
               </div>
               <div>
                 <FormControlLabel
-                  disabled={!exam.questions[0].options[3]?.length > 0}
-                  value={exam.questions[0].options[3]}
+                  disabled={!g[3].length > 0}
+                  value={g[3]}
                   control={<Radio />}
                   onChange={(e) =>
                     setExam((prevState) => {
-                      exam.questions[0].options[3] = e.target.value;
+                      g[3] = e.target.value;
                       console.log(prevState);
                       return {
                         // ...exam,
@@ -344,7 +341,7 @@ function ExamNew() {
         />
         <input
           className="btn btn-primary"
-          disabled={index !== 16}
+          // disabled={index !== 16}
           onClick={submitExam}
           type="submit"
           value="Submit Exam"
@@ -353,7 +350,7 @@ function ExamNew() {
         <input
           className="btn btn-primary"
           type="button"
-          disabled={index === 16}
+          // disabled={index === 16}
           onClick={nextQuestion}
           value="Next Question"
         />
