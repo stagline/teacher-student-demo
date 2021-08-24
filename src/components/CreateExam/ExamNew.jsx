@@ -5,9 +5,11 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import axios from "axios";
 
 function ExamNew() {
-  // https://drive.google.com/drive/folders/1pdB7FMrk-aYQcJRN4tj9dkTiMtfktzUJ?usp=sharing
+  // romoxo8760@flipssl.com
+  // pass 123456789
   const { config } = useContext(DataContext);
 
   const [exam, setExam] = useState({
@@ -23,9 +25,6 @@ function ExamNew() {
   });
 
   const [index, setIndex] = useState(exam.questions.length);
-  const handleChange = (e) => {
-    setExam({ ...exam, [e.target.name]: e.target.value });
-  };
 
   const [value, setValue] = useState("");
 
@@ -33,25 +32,25 @@ function ExamNew() {
     setValue(event.target.value);
   };
 
-  const next = () => {
-    setIndex(index + 1);
-    setExam({
-      ...exam,
-      questions: [
-        ...exam.questions,
-        {
-          question: "",
-          answer: "",
-          options: ["", "", "", ""],
-        },
-      ],
-    });
-    console.log(exam, "Exam data");
-  };
-
   const handlePrevious = () => {
     console.log("previous");
     setIndex(index - 1);
+  };
+
+  const submitExam = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "https://nodejsexamination.herokuapp.com/dashboard/Teachers/Exam",
+        exam,
+        config
+      )
+      .then((response) => {
+        setExam({ response });
+        alert("Exam Created Successfully!");
+        console.log(response);
+      });
+    console.log(exam);
   };
 
   const nextQuestion = () => {
@@ -83,7 +82,6 @@ function ExamNew() {
 
     if (newQuestion.options.length === 4) {
       setExam((prevState) => ({
-        ...exam,
         subjectName: exam.subjectName,
         questions: [...prevState.questions, newQuestion],
         notes: exam.notes,
@@ -92,14 +90,13 @@ function ExamNew() {
       alert("Same options are not allowed");
       return;
     }
-
     console.log(exam);
-
     const length = exam?.questions.length + 1;
     setIndex(length);
     console.log(index);
 
     document.examForm.reset();
+
     // if (exam?.questions.every(x => !(x['que'] == que))) { }
 
     // // exam?.questions?.push({ question: que, answer: value, options: [item[0].options[1], item[0].options[2], item[0].options[3], item[0].options[4]] })
@@ -120,32 +117,51 @@ function ExamNew() {
     // }
   };
 
+  const reset = () => {
+    document.examForm.reset();
+  };
+
   return (
     <div>
       <p>{`Question:- ${index}`}</p>
-      <div>
-        <label htmlFor="">Subject Name :</label>
-        <select
-          disabled={index !== 1}
-          onChange={(e) =>
-            setExam((prevState) => {
-              exam.subjectName = e.target.value;
-              console.log(prevState);
-              return {
-                ...prevState,
-              };
-            })
-          }
-        >
-          <option value="Operating Systems">Operating Systems</option>
-          <option value="Data Structures">Data Structures</option>
-          <option value="DSP">DSP</option>
-          <option value="Data Communication">Data Communication</option>
-          <option value="RTES">RTES</option>
-        </select>
-      </div>
       <form name="examForm">
         <div>
+          <div>
+            <label htmlFor="">Subject Name :</label>
+            <select
+              disabled={index !== 1}
+              onChange={(e) =>
+                setExam((prevState) => {
+                  exam.subjectName = e.target.value;
+                  console.log(prevState);
+                  return {
+                    ...prevState,
+                  };
+                })
+              }
+            >
+              <option value="Operating Systems">Operating Systems</option>
+              <option value="Data Structures">Data Structures</option>
+              <option value="DSP">DSP</option>
+              <option value="Data Communication">Data Communication</option>
+              <option value="RTES">RTES</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="">Notes :</label>
+            <input
+              onChange={(e) =>
+                setExam((prevState) => {
+                  exam.notes[0] = e.target.value;
+                  console.log(prevState);
+                  return {
+                    ...exam,
+                    ...prevState,
+                  };
+                })
+              }
+            />
+          </div>
           <label>Question</label>
           {/* {...exam,questions:[{...exam.questions[index-1],question:e.target.value}],} */}
           <input
@@ -155,11 +171,20 @@ function ExamNew() {
                 exam.questions[0].question = e.target.value;
                 console.log(prevState);
                 return {
-                  ...exam,
+                  // ...exam,
                   ...prevState,
                 };
               })
             }
+          />
+        </div>
+        <div>
+          <label>Answer:</label>
+          <input
+            type="text"
+            id="answer"
+            value={exam.questions[0].options.length >= 1 ? value : ""}
+            disabled
           />
         </div>
         <div>
@@ -168,7 +193,10 @@ function ExamNew() {
             <RadioGroup value={value} onChange={handleChangee}>
               <div>
                 <FormControlLabel
-                  disabled={!exam.questions[0].options[0]?.length > 0}
+                  disabled={
+                    !exam.questions[0].options[0]?.length > 0 &&
+                    exam.questions[0].options[0].length === 0
+                  }
                   value={exam.questions[0].options[0]}
                   control={<Radio />}
                   onChange={(e) =>
@@ -176,7 +204,7 @@ function ExamNew() {
                       exam.questions[0].options[0] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -190,7 +218,7 @@ function ExamNew() {
                       exam.questions[0].options[0] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -208,7 +236,7 @@ function ExamNew() {
                       exam.questions[0].options[1] = e.target.value;
                       console.log(exam.questions[0].options[1]);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -222,7 +250,7 @@ function ExamNew() {
                       exam.questions[0].options[1] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -240,7 +268,7 @@ function ExamNew() {
                       exam.questions[0].options[2] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -254,7 +282,7 @@ function ExamNew() {
                       exam.questions[0].options[2] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -272,7 +300,7 @@ function ExamNew() {
                       exam.questions[0].options[3] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -286,7 +314,7 @@ function ExamNew() {
                       exam.questions[0].options[3] = e.target.value;
                       console.log(prevState);
                       return {
-                        ...exam,
+                        // ...exam,
                         ...prevState,
                       };
                     })
@@ -296,122 +324,41 @@ function ExamNew() {
               </div>
             </RadioGroup>
           </FormControl>
-          <div>
-            <label>Answer:</label>
-            <input
-              type="text"
-              id="answer"
-              value={value}
-              onChange={(e) =>
-                setExam((prevState) => {
-                  return prevState;
-                })
-              }
-              disabled
-            />
-          </div>
-          <div>
-            <label htmlFor="">Notes :</label>
-            <input
-              onChange={(e) =>
-                setExam((prevState) => {
-                  exam.notes[0] = e.target.value;
-                  console.log(prevState);
-                  return {
-                    ...exam,
-                    ...prevState,
-                  };
-                })
-              }
-            />
-          </div>
-          <div>
-            <button disabled={index !== 15}>Submit</button>
-          </div>
         </div>
       </form>
-      <div>
-        <button disabled={index === 1} onClick={handlePrevious}>
-          Prev
-        </button>
-        <button disabled={index === 15} onClick={nextQuestion}>
-          Next
-        </button>
+      <div style={{ display: "inline-flex", margin: "10px" }}>
+        <input
+          className="btn btn-primary"
+          type="button"
+          disabled={index === 1}
+          onClick={handlePrevious}
+          value="Previous Question"
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          className="btn btn-primary"
+          type="button"
+          onClick={reset}
+          value="reset"
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          className="btn btn-primary"
+          disabled={index !== 16}
+          onClick={submitExam}
+          type="submit"
+          value="Submit Exam"
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          className="btn btn-primary"
+          type="button"
+          disabled={index === 16}
+          onClick={nextQuestion}
+          value="Next Question"
+        />
       </div>
     </div>
-    // <div>
-    //   {index}
-    //   <form action="" onChange={handleChange}>
-    //     <label htmlFor="">SubjectName</label>
-    //     <input
-    //       type="text"
-    //       name="subjectName"
-    //       onChange={(e) => setExam({ ...exam, subjectName: e.target.value })}
-    //     />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">notes</label>
-    //     <input
-    //       type="text"
-    //       name="notes"
-    //       onChange={(e) =>
-    //         setExam((prevState) => {
-    //           exam.notes[0] = e.target.value;
-    //           console.log(prevState);
-    //           return {
-    //             ...prevState,
-    //           };
-    //         })
-    //       }
-    //     />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">question</label>
-    //     <input
-    //       type="text"
-    //       name="question"
-    //       value={exam.questions[index - 1].question}
-    //       onChange={(e) =>
-    //         setExam((prevState) => {
-    //           const questions = [...prevState.questions];
-    //           const subjectName = prevState.subjectName;
-    //           const notes = prevState.notes;
-    //           questions[index - 1] = {
-    //             ...questions[index - 1],
-    //             question: e.target.value,
-    //           };
-    //           return { subjectName, questions, notes };
-    //         })
-    //       }
-    //     />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">answer</label>
-    //     <input type="text" name="answer" />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">option 1</label>
-    //     <input type="text" name="option1" />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">option 2</label>
-    //     <input type="text" name="option2" />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">option 3</label>
-    //     <input type="text" name="option3" />
-    //     <br />
-    //     <br />
-    //     <label htmlFor="">option 4</label>
-    //     <input type="text" name="option4" />
-    //     <br />
-    //     <br />
-    //   </form>
-    //   <button>Prev</button>
-    //   <button>Submit</button>
-    //   <button>Clear</button>
-    //   <button onClick={next}>Next</button>
-    // </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import DataContext from "../../Contexts/DataContext";
+import DataContext from "../Contexts/DataContext";
 
 function Exam() {
   const { config } = useContext(DataContext);
