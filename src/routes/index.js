@@ -27,6 +27,8 @@ import ViewStudentsDetail from '../components/ViewStudentsDetail/ViewStudentsDet
 import axios from 'axios';
 import DataContext from '../Contexts/DataContext';
 import ExamCreator from '../ExamCreator';
+import New from './New';
+import Exam from './Exam';
 
 function Index() {
 
@@ -80,7 +82,8 @@ function Index() {
                     <ProtectedRoute exact path="/verified-student" component={VerifiedStudent} />
 
                     <ProtectedRoute exact path="/view-students-detail" component={ViewStudentsDetail} />
-                    <ProtectedRoute exact path="/create-exam" component={ExamCreator} />
+                    <ProtectedRoute exact path="/create-exam" component={ExamNew} />
+                    <ProtectedRoute exact path="/create-exam" component={ExamNew} />
                     <ProtectedRoute exact path="/student" component={Student} />
                     <ProtectedRoute exact path="/student/:_id" component={ExamPaper} />
                     <Route exact path="/explore" >
