@@ -8,6 +8,7 @@ import { Fragment } from 'react';
 
 const ExamCreator = () =>  {
 
+    
     const [index, setIndex] = useState(1);
 
     const [examCreateState, setExamCreateState] = useState({
@@ -34,6 +35,7 @@ const ExamCreator = () =>  {
 
   const [questionState, setQuestionState] = useState([])
 
+  console.log("questionState",questionState);
   console.log("questionState",questionState);
 
   // console.log("questionOption",questionOption);
