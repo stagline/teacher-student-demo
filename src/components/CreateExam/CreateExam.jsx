@@ -80,7 +80,7 @@ function CreateExam() {
       options: optionsWithNoDuplicates,
     };
     setCheckk([...checkk, newQuestion]);
-    console.log(checkk)
+    console.log(checkk);
   };
 
   const handleChangee = (event) => {
@@ -183,8 +183,77 @@ function CreateExam() {
     document.questions.reset();
   };
 
+  const [d, setD] = useState({
+    subjectName: "",
+    notes: [],
+    questions: [
+      {
+        question: "",
+        answer: "",
+        options: [],
+      },
+    ],
+  });
+
+  const change = (e) => {
+    setD({ ...d, [e.target.name]: e.target.value });
+  };
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    setD({
+      ...d,
+      question: d.subjectName,
+      answer: d.answer,
+      options: d.options,
+    });
+    console.log(d);
+  }
+
+
   return (
     <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="question"
+          placeholder="Type b"
+          data-group="question" // add custom attribute typeA | typeB etc.
+          onChange={(e) => change(e)}
+        />
+        <input
+          type="text"
+          name="answer"
+          placeholder="Type b"
+          data-group="answer" // add custom attribute typeA | typeB etc.
+          onChange={(e) =>
+            setD((prevState) => {
+              // g[0] = e.target.value;
+              console.log(prevState);
+              return {
+                ...prevState,
+              };
+            })
+          }
+        />
+        <input
+          type="text"
+          name="options"
+          placeholder="Type b"
+          data-group="options" // add custom attribute typeA | typeB etc.
+          onChange={(e) =>
+            setD((prevState) => {
+              // g[0] = e.target.value;
+              console.log(prevState);
+              return {
+                ...prevState,
+              };
+            })
+          }
+        />
+        <input type="submit" value="kkk" />
+      </form>
+
       <button onClick={check}>check</button>
       <h1>Create Exam</h1>
       <b>Question : - {index} </b>

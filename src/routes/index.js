@@ -27,8 +27,8 @@ import ViewStudentsDetail from '../components/ViewStudentsDetail/ViewStudentsDet
 import axios from 'axios';
 import DataContext from '../Contexts/DataContext';
 import New from './New';
-import Exam from './Exam';
 import ExamNew from '../components/CreateExam/ExamNew';
+import ExamCreator from './ExamCreator';
 
 function Index() {
 

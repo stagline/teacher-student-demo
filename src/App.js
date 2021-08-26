@@ -3,7 +3,6 @@ import Routes from "./routes/index";
 import DataContext from "./Contexts/DataContext";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UseForm from "./UseForm";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -94,7 +93,6 @@ function App() {
         }}
       >
         <Routes />
-        {/* <UseForm /> */}
       </DataContext.Provider>
     </div>
   );
