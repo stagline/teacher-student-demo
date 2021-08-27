@@ -11,8 +11,8 @@ function ExamNew() {
     subjectName: "",
     questions: [
       {
-        // question: "",
-        // answer: "",
+        question: "",
+        answer: "",
         options: ["", "", "", ""],
       },
     ],
@@ -72,22 +72,19 @@ function ExamNew() {
       answer: value,
       options: optionsWithNoDuplicates,
     };
-    if (qvalue === que) {
-      return;
-    } else {
-      if (newQuestion.options.length === 4) {
-        console.log(newQuestion, "oooo");
-        {
-          setExam((prevState) => ({
-            subjectName: exam.subjectName,
-            questions: [...prevState.questions, newQuestion],
-            notes: exam.notes,
-          }));
-        }
-      } else {
-        alert("Same options are not allowed");
-        return;
+
+    if (newQuestion.options.length === 4) {
+      {
+        setExam((prevState) => ({
+          subjectName: exam.subjectName,
+          questions: [...prevState.questions, newQuestion],
+          notes: exam.notes,
+        }));
+        localStorage.setItem("exam", JSON.stringify(exam.questions));
       }
+    } else {
+      alert("Same options are not allowed");
+      return;
     }
 
     console.log(exam);
@@ -105,17 +102,16 @@ function ExamNew() {
     setExam({ ...exam, questions: clone });
   };
 
-  const updateOptions = (prop, event, index) => {
-    // const old = exam?.questions[index]?.options;
-    // const updated = { ...old, [prop]: event.target.value };
-    // const clone = [...exam?.questions.map((o) => o.options)];
-    // clone[index] = updated;
-    // setExam({ ...exam, options: clone });
-    // console.log(clone);
-    var options = Object.assign({}, exam.questions.options);
-    options[index] = event.target.value;
-    setExam({ options: options });
+  const onChangeUser = (e) => {
+    const { name, value } = e.target;
+    setExam({ ...exam, [name]: value });
   };
+
+  // const updateOptions = (prop, event, index) => {
+  //   var options = Object.assign({}, exam.questions.options);
+  //   options[index] = event.target.value;
+  //   setExam({ options: options });
+  // };
 
   const reset = () => {
     document.examForm.reset();
@@ -172,26 +168,16 @@ function ExamNew() {
               <br />
               <br />
               <label htmlFor="">Answer :</label>
-              <input onChange={(e) => updateItem("answer", e, i)} />
+              <input
+                onChange={(e) => updateItem("answer", e, i)}
+                value={value}
+                // readOnly
+              />
               <br />
               <label htmlFor="">Options</label>
               <br />
               {item?.options?.map((_, u) => (
                 <>
-                  {/* <input
-                    type="text"
-                    name={u}
-                    onChange={(e) =>
-                      setExam((prevState) => {
-                        _ = e.target.value;
-                        console.log(prevState);
-                        setValue(e.target.value);
-                        return {
-                          ...prevState,
-                        };
-                      })
-                    }
-                  /> */}
                   <FormControlLabel
                     control={<Radio />}
                     onChange={(e) =>
@@ -200,28 +186,26 @@ function ExamNew() {
                         console.log(prevState);
                         setValue(e.target.value);
                         return {
-                          ...prevState,
+                          ...prevState.questions.length - 1,
+                          ...exam
                         };
                       })
                     }
+                    value={g[u]}
                     disabled={!g[u].length > 0}
-                    // value={_.option}
                   />
                   <input
                     type="text"
-                    // name={"option" + i}
-                    // id={_.id}
                     onChange={(e) =>
                       setExam((prevState) => {
                         exam.questions[0].options[u] = e.target.value;
                         console.log(prevState);
                         return {
-                          ...prevState,
+                          ...prevState.questions.length - 1,
+                          ...exam
                         };
                       })
                     }
-                    // onChange={(e) => updateOptions("options", e, i)}
-                    // value={_.[u]}
                   />
                   <br />
                 </>
