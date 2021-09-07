@@ -1,249 +1,213 @@
-import React, { useContext, useState } from "react";
-import DataContext from "../../Contexts/DataContext";
+import React, { useEffect, useState, useContext } from "react";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import axios from "axios";
+import DataContext from "../../Contexts/DataContext";
 
 function ExamNew() {
   const { config } = useContext(DataContext);
-
+  const [button, setButton] = useState("NEXT");
   const [exam, setExam] = useState({
     subjectName: "",
-    questions: [
-      {
-        question: "",
-        answer: "",
-        options: ["", "", "", ""],
-      },
-    ],
+    questions: [],
     notes: [],
+    activeIndex: 0,
   });
 
-  const [index, setIndex] = useState(exam?.questions?.length);
+  const reusable = exam?.questions?.[exam.activeIndex];
 
-  const [value, setValue] = useState();
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  const handlePrevious = () => {
-    console.log("previous");
-    setIndex(index - 1);
-  };
-
-  const submitExam = (e) => {
+  useEffect(() => {
+    setExam({
+      ...exam,
+      questions: [
+        {
+          question: "",
+          answer: "",
+          options: ["", "", "", ""],
+        },
+      ],
+    });
+  }, []);
+  for (var i = 0; i < exam.questions.length; i += 1) {
+    // console.log("ppppp", exam.questions[i].answer.includes(""));
+  }
+  const next = (e) => {
     e.preventDefault();
+    setButton("NEXT");
+    const a = JSON.parse(localStorage.getItem("exam"));
+    const examQuestionValues = a
+      ? Object?.values(a).map((que) => que.question)
+      : [];
+    const questionWithNoDuplicates = examQuestionValues.includes(
+      reusable.question
+    );
+    let optionsWithNoDuplicates = Object.keys(
+      reusable.options?.reduce((a, c) => ({ ...a, [c]: (a[c] || 0) + 1 }), {})
+    );
+    // console.log(optionsWithNoDuplicates, "optionsWithNoDuplicates");
+    if (exam?.subjectName?.length === 0 || reusable.answer.length === 0) {
+      alert("All Required");
+      return;
+    } else {
+      if (questionWithNoDuplicates === true) {
+        alert("Same Questions");
+        return;
+      } else {
+        if (optionsWithNoDuplicates.length === 4) {
+          setExam({
+            ...exam,
+            questions: [
+              ...exam.questions,
+              {
+                question: "",
+                answer: "",
+                options: ["", "", "", ""],
+              },
+            ],
+            activeIndex: exam.activeIndex + 1,
+          });
+        } else {
+          alert("Same options");
+          return;
+        }
+      }
+    }
+    console.log(exam);
+    localStorage.setItem("exam", JSON.stringify(exam.questions));
+  };
+
+  const previous = () => {
+    setButton("UPDATE");
+    setExam({
+      ...exam,
+      activeIndex: exam.activeIndex - 1,
+    });
+    exam.questions.pop();
+    console.log(exam);
+  };
+
+  const onChange = (i) => (e) => {
+    const { name, value } = e.target;
+    const examClone = { ...exam };
+    if (name === "options") {
+      examClone.questions[examClone.activeIndex][name][i] = value;
+    } else if (name === "subjectName") {
+      examClone[name] = value;
+    } else if (name === "notes") {
+      examClone[name] = [value];
+    } else {
+      examClone.questions[examClone.activeIndex][name] = value;
+    }
+    setExam(examClone);
+  };
+
+  const submit = () => {
+    exam.questions.pop();
+    const body = {
+      subjectName: exam.subjectName,
+      questions: exam.questions,
+      notes: exam.notes,
+    };
     axios
       .post(
         "https://nodejsexamination.herokuapp.com/dashboard/Teachers/Exam",
-        exam,
+        body,
         config
       )
       .then((response) => {
-        setExam({ ...exam, response });
-        alert("Exam Created Successfully!");
         console.log(response);
-      });
-    console.log(exam);
+      })
+      .catch((error) => console.log(error));
   };
 
-  const nextQuestion = () => {
-    const qvalue = exam.questions.map((o) => o.question).valueOf(index);
-    console.log(qvalue);
-    const que = exam?.questions?.[0]?.question;
-
-    const examQuestionValues = Object.values(exam?.questions).map(
-      (ques) => ques.question
-    );
-    console.log(examQuestionValues, "Exam contains Question Values");
-
-    const questionWithNoDuplicates = examQuestionValues.includes(que);
-    console.log(questionWithNoDuplicates, "Question With no Duplicates Values");
-
-    let options = [g?.[0], g?.[1], g?.[2], g?.[3]];
-    let optionsWithNoDuplicates = Object.keys(
-      options.reduce((a, c) => ({ ...a, [c]: (a[c] || 0) + 1 }), {})
-    );
-
-    console.log(value, "value name");
-    const newQuestion = {
-      question: que,
-      answer: value,
-      options: optionsWithNoDuplicates,
-    };
-
-    if (newQuestion.options.length === 4) {
-      {
-        setExam((prevState) => ({
-          subjectName: exam.subjectName,
-          questions: [...prevState.questions, newQuestion],
-          notes: exam.notes,
-        }));
-        localStorage.setItem("exam", JSON.stringify(exam.questions));
-      }
-    } else {
-      alert("Same options are not allowed");
-      return;
-    }
-
-    console.log(exam);
-    const length = exam?.questions.length + 1;
-    setIndex(length);
-    console.log(index);
-  };
-
-  const updateItem = (prop, event, index) => {
-    const old = exam?.questions[index];
-    const updated = { ...old, [prop]: event.target.value };
-    const clone = [...exam?.questions];
-    clone[index] = updated;
-    console.log("clone", clone);
-    setExam({ ...exam, questions: clone });
-  };
-
-  const onChangeUser = (e) => {
-    const { name, value } = e.target;
-    setExam({ ...exam, [name]: value });
-  };
-
-  // const updateOptions = (prop, event, index) => {
-  //   var options = Object.assign({}, exam.questions.options);
-  //   options[index] = event.target.value;
-  //   setExam({ options: options });
-  // };
-
-  const reset = () => {
-    document.examForm.reset();
-  };
-
-  const g = exam?.questions[0]?.options?.map((i) => i);
-  console.log("value", value);
   return (
     <div>
-      <p>{`Question:- ${index}`}</p>
-      <form name="examForm">
+      <p>Question:- {exam.activeIndex + 1}</p>
+      <br />
+      <label htmlFor="">Subject Name :</label>
+      <select
+        disabled={exam.activeIndex != 0}
+        type="text"
+        name="subjectName"
+        onChange={onChange()}
+        value={exam.subjectName}
+      >
+        <option value="Operating Systems">Operating Systems</option>
+        <option value="Data Structures">Data Structures</option>
+        <option value="DSP">DSP</option>
+        <option value="Data Communication">Data Communication</option>
+        <option value="DIC">DIC</option>
+      </select>
+      <br />
+      <br />
+      <label htmlFor="">Notes</label>
+      <input
+        disabled={exam.activeIndex <= 13}
+        type="text"
+        name="notes"
+        onChange={onChange()}
+      />
+      <br />
+      <br />
+      <form name="examForm" onSubmit={next}>
+        {exam?.questions?.length > 0 &&
+          Object.entries(reusable).map(([key, value], index) => {
+            return (
+              <React.Fragment key={index}>
+                <div>
+                  <label htmlFor="">{key}: </label>
+                  {key === "options" ? (
+                    value.map((o, i) => {
+                      return (
+                        <React.Fragment key={i}>
+                          <FormControlLabel
+                            disabled={!o.length > 0}
+                            control={<Radio checked={reusable.answer === o} />}
+                            name="answer"
+                            value={o}
+                            onChange={onChange(i)}
+                            required
+                          />
+                          <input
+                            name="options"
+                            value={o}
+                            onChange={onChange(i)}
+                            required
+                          />
+                          <br />
+                        </React.Fragment>
+                      );
+                    })
+                  ) : (
+                    <input
+                      name={key}
+                      value={value}
+                      onChange={onChange()}
+                      readOnly={key === "answer"}
+                      required
+                    />
+                  )}
+                </div>
+                <br />
+              </React.Fragment>
+            );
+          })}
         <div>
-          <div>
-            <label htmlFor="">Subject Name :</label>
-            <select
-              // disabled={index !== 1}
-              onChange={(e) =>
-                setExam((prevState) => {
-                  exam.subjectName = e.target.value;
-                  console.log(prevState);
-                  return {
-                    ...prevState,
-                  };
-                })
-              }
-            >
-              <option value="Operating Systems">Operating Systems</option>
-              <option value="Data Structures">Data Structures</option>
-              <option value="DSP">DSP</option>
-              <option value="Data Communication">Data Communication</option>
-              <option value="Exam987">Exam987</option>
-              <option value="Exam456">Exam456</option>
-              <option value="Exam101">Exam101</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="">Notes :</label>
-            <input
-              onChange={(e) =>
-                setExam((prevState) => {
-                  exam.notes[0] = e.target.value;
-                  console.log(prevState);
-                  return {
-                    ...prevState,
-                  };
-                })
-              }
-            />
-          </div>
-          {exam?.questions?.map((item, i) => (
-            <div key={i}>
-              <label htmlFor="">Questions :</label>
-              <input onChange={(e) => updateItem("question", e, i)} />
-              <br />
-              <br />
-              <label htmlFor="">Answer :</label>
-              <input
-                onChange={(e) => updateItem("answer", e, i)}
-                value={value}
-                // readOnly
-              />
-              <br />
-              <label htmlFor="">Options</label>
-              <br />
-              {item?.options?.map((_, u) => (
-                <>
-                  <FormControlLabel
-                    control={<Radio />}
-                    onChange={(e) =>
-                      setExam((prevState) => {
-                        g[u] = e.target.value;
-                        console.log(prevState);
-                        setValue(e.target.value);
-                        return {
-                          ...prevState.questions.length - 1,
-                          ...exam
-                        };
-                      })
-                    }
-                    value={g[u]}
-                    disabled={!g[u].length > 0}
-                  />
-                  <input
-                    type="text"
-                    onChange={(e) =>
-                      setExam((prevState) => {
-                        exam.questions[0].options[u] = e.target.value;
-                        console.log(prevState);
-                        return {
-                          ...prevState.questions.length - 1,
-                          ...exam
-                        };
-                      })
-                    }
-                  />
-                  <br />
-                </>
-              ))}
-            </div>
-          ))}
+          <input
+            type="submit"
+            value={button}
+            disabled={exam.activeIndex >= 15}
+          />
         </div>
       </form>
-      <div style={{ display: "inline-flex", margin: "10px" }}>
-        <input
-          className="btn btn-primary"
-          type="button"
-          onClick={handlePrevious}
-          value="Previous Question"
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          className="btn btn-primary"
-          type="button"
-          onClick={reset}
-          value="reset"
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          className="btn btn-primary"
-          onClick={submitExam}
-          type="submit"
-          value="Submit Exam"
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          className="btn btn-primary"
-          disabled={index === 15}
-          type="button"
-          onClick={nextQuestion}
-          value="Next Question"
-        />
-      </div>
+      <button disabled={exam.activeIndex === 0} onClick={previous}>
+        previous
+      </button>
+      <br />
+      <br />
+      <button disabled={exam.activeIndex != 15} onClick={submit}>
+        submit
+      </button>
     </div>
   );
 }

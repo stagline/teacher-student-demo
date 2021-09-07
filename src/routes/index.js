@@ -14,7 +14,6 @@ import Teacher from '../components/TeacherDashboard/Teacher';
 import ResetPassword from '../components/ResetPassword/ResetPassword';
 import VerifiedStudent from '../components/VerifiedStudent/VerifiedStudent';
 import AllStudentData from '../components/AllStudents/AllStudentData';
-import CreateExam from '../components/CreateExam/CreateExam';
 import GetStudentDetail from '../components/GetStudentDetail/GetStudentDetail';
 import UpdateStudent from '../components/UpdateStudent/UpdateStudent';
 import AllExamForStudent from '../components/AllExam/AllExamForStudent';
@@ -26,10 +25,8 @@ import ViewExamDetail from '../components/ViewExamDetail/ViewExamDetail';
 import ViewStudentsDetail from '../components/ViewStudentsDetail/ViewStudentsDetail';
 import axios from 'axios';
 import DataContext from '../Contexts/DataContext';
-import New from './New';
-// import CreateExam from './CreateExam';
-import NewFile from './NewFile';
 import ExamNew from '../components/CreateExam/ExamNew';
+
 
 function Index() {
 

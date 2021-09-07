@@ -7,7 +7,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import axios from "axios";
 
-function ExamNew() {
+function Nee() {
   const { config } = useContext(DataContext);
 
   const [exam, setExam] = useState({
@@ -142,6 +142,7 @@ function ExamNew() {
   };
 
   const g = exam?.questions[0]?.options?.map((i) => i);
+
   return (
     <div>
       <p>{`Question:- ${index}`}</p>
@@ -236,172 +237,172 @@ function ExamNew() {
             </div>
           ))}
           {/* {exam?.questions?.length &&
-            exam?.questions?.map((_item, i) => {
-              console.log(_item,"oopopoop")
-              _item?.options?.map((_, is) => {
-                return (
-                  <>
-                    <FormControlLabel
-                      control={<Radio />}
-                      
-                      value={_.option}
-                    />
-                    <input
-                      type="text"
-                      name={"option" + i}
-                      id={_.id}
-                      onChange={(e) => updateOptions("options", e, i)}
-                      value={_.option}
-                    />
-                    <br />
-                  </>
-                );
-              });
-            })} */}
+              exam?.questions?.map((_item, i) => {
+                console.log(_item,"oopopoop")
+                _item?.options?.map((_, is) => {
+                  return (
+                    <>
+                      <FormControlLabel
+                        control={<Radio />}
+                        
+                        value={_.option}
+                      />
+                      <input
+                        type="text"
+                        name={"option" + i}
+                        id={_.id}
+                        onChange={(e) => updateOptions("options", e, i)}
+                        value={_.option}
+                      />
+                      <br />
+                    </>
+                  );
+                });
+              })} */}
           {/* <input
-            type="text"
-            onChange={(e) =>
-              setExam((prevState) => {
-                exam.questions[0].question = e.target.value;
-                console.log(prevState);
-                return {
-                  ...prevState,
-                };
-              })
-            }
-          /> */}
+              type="text"
+              onChange={(e) =>
+                setExam((prevState) => {
+                  exam.questions[0].question = e.target.value;
+                  console.log(prevState);
+                  return {
+                    ...prevState,
+                  };
+                })
+              }
+            /> */}
         </div>
         {/* <div>
-          <label>Answer:</label>
-          <input type="text" value={value} />
-        </div> */}
+            <label>Answer:</label>
+            <input type="text" value={value} />
+          </div> */}
         <div>
           {/* <FormControl component="fieldset">
-            <FormLabel component="legend">Options</FormLabel>
-            <RadioGroup value={value} onChange={handleChange}>
-              <div>
-                <FormControlLabel
-                  disabled={!g?.[0]?.length > 0}
-                  value={g?.[0]}
-                  control={<Radio />}
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      // g[0] = e.target.value;
-                      console.log(prevState);
-                      setValue(e.target.value);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />{" "}
-                <input
-                  type="text"
-                  name="option1"
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      exam.questions = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />
-                <br />
-              </div>
-              <div>
-                <FormControlLabel
-                  disabled={!g?.[1]?.length > 0}
-                  value={g?.[1]}
-                  control={<Radio />}
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      g[1] = e.target.value;
-                      console.log(g[1]);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />{" "}
-                <input
-                  type="text"
-                  name="option2"
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      exam.questions = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />
-                <br />
-              </div>
-              <div>
-                <FormControlLabel
-                  disabled={!g?.[2]?.length > 0}
-                  value={g?.[2]}
-                  control={<Radio />}
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      g[2] = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />{" "}
-                <input
-                  type="text"
-                  name="option3"
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      exam.questions = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />
-                <br />
-              </div>
-              <div>
-                <FormControlLabel
-                  disabled={!g?.[3]?.length > 0}
-                  value={g?.[3]}
-                  control={<Radio />}
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      g[3] = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />{" "}
-                <input
-                  type="text"
-                  name="option4"
-                  onChange={(e) =>
-                    setExam((prevState) => {
-                      exam.questions = e.target.value;
-                      console.log(prevState);
-                      return {
-                        ...prevState,
-                      };
-                    })
-                  }
-                />
-                <br />
-              </div>
-            </RadioGroup>
-          </FormControl> */}
+              <FormLabel component="legend">Options</FormLabel>
+              <RadioGroup value={value} onChange={handleChange}>
+                <div>
+                  <FormControlLabel
+                    disabled={!g?.[0]?.length > 0}
+                    value={g?.[0]}
+                    control={<Radio />}
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        // g[0] = e.target.value;
+                        console.log(prevState);
+                        setValue(e.target.value);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />{" "}
+                  <input
+                    type="text"
+                    name="option1"
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        exam.questions = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />
+                  <br />
+                </div>
+                <div>
+                  <FormControlLabel
+                    disabled={!g?.[1]?.length > 0}
+                    value={g?.[1]}
+                    control={<Radio />}
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        g[1] = e.target.value;
+                        console.log(g[1]);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />{" "}
+                  <input
+                    type="text"
+                    name="option2"
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        exam.questions = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />
+                  <br />
+                </div>
+                <div>
+                  <FormControlLabel
+                    disabled={!g?.[2]?.length > 0}
+                    value={g?.[2]}
+                    control={<Radio />}
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        g[2] = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />{" "}
+                  <input
+                    type="text"
+                    name="option3"
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        exam.questions = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />
+                  <br />
+                </div>
+                <div>
+                  <FormControlLabel
+                    disabled={!g?.[3]?.length > 0}
+                    value={g?.[3]}
+                    control={<Radio />}
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        g[3] = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />{" "}
+                  <input
+                    type="text"
+                    name="option4"
+                    onChange={(e) =>
+                      setExam((prevState) => {
+                        exam.questions = e.target.value;
+                        console.log(prevState);
+                        return {
+                          ...prevState,
+                        };
+                      })
+                    }
+                  />
+                  <br />
+                </div>
+              </RadioGroup>
+            </FormControl> */}
         </div>
       </form>
       <div style={{ display: "inline-flex", margin: "10px" }}>
@@ -438,4 +439,4 @@ function ExamNew() {
   );
 }
 
-export default ExamNew;
+export default Nee;
