@@ -13,10 +13,16 @@ function useGiveExam() {
   const [data, setData] = useState();
   const [giveExam, setGiveExam] = useState([
     {
-      question: _id,
+      question: "",
       answer: "",
+      activeIndex: 0,
     },
   ]);
+
+  const handleChange = (e) => {
+    setGiveExam({ [e.target.name]: e.target.value });
+    console.log(giveExam);
+  };
 
   useEffect(() => {
     axios
@@ -52,7 +58,7 @@ function useGiveExam() {
     console.log("Submit Success!");
   };
 
-  return [{ submit, data }];
+  return [{ submit, data, giveExam, setGiveExam, handleChange }];
 }
 
 export default useGiveExam;
