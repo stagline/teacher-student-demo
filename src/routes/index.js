@@ -27,6 +27,7 @@ import axios from "axios";
 import DataContext from "../Contexts/DataContext";
 import ExamNew from "../components/CreateExam/ExamNew";
 import GiveExam from "../components/GiveExam/GiveExam";
+import Give from "../components/GiveExam/Give";
 
 function Index() {
   const data = [
@@ -110,7 +111,7 @@ function Index() {
           <ProtectedRoute exact path="/create-exam" component={ExamNew} />
           <ProtectedRoute exact path="/student" component={Student} />
           <ProtectedRoute exact path="/student/:_id" component={ExamPaper} />
-          <ProtectedRoute exact path="/give-exam/:_id" component={GiveExam} />
+          <ProtectedRoute exact path="/give-exam/:_id" component={Give} />
           <Route exact path="/explore">
             <Explore data={data} />
           </Route>

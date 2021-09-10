@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import useStudent from "./useStudent";
 
 function Student() {
-  const [{ studentData, getStudentDetail, updateStudent }] =
-    useStudent();
+  const [{ studentData, getStudentDetail, updateStudent }] = useStudent();
 
   return (
     <div>
