@@ -28,6 +28,7 @@ import DataContext from "../Contexts/DataContext";
 import ExamNew from "../components/CreateExam/ExamNew";
 import GiveExam from "../components/GiveExam/GiveExam";
 import Give from "../components/GiveExam/Give";
+import ViewStudentDetailsTeacher from "../components/ViewStudentDetailsTeacher/ViewStudentDetailsTeacher";
 
 function Index() {
   const data = [
@@ -59,7 +60,7 @@ function Index() {
         config
       )
       .then((response) => {
-        console.log("From App ViewExam>>>", response);
+        // console.log("From App ViewExam>>>", response);
         setViewExam({ response });
       });
   }, []);
@@ -118,11 +119,18 @@ function Index() {
           <Route exact path="/explore/:name">
             <StudentNew data={data} />
           </Route>
-          <Route exact path="/view-exam">
+          <Route exact path="/view-exam/:_id">
             <ViewExam />
           </Route>
-          <Route exact path="/view-exam/:id" component={ViewExamDetail}>
+          <Route exact path="/view-exam-detail/:_id" component={ViewExamDetail}>
             <ViewExamDetail />
+          </Route>
+          <Route
+            exact
+            path="/view-student-details/:_id"
+            component={ViewStudentDetailsTeacher}
+          >
+            <ViewStudentDetailsTeacher />
           </Route>
         </Switch>
       </Router>
@@ -132,7 +140,7 @@ function Index() {
 
 function ProtectedRoute({ component: Component, ...restOfProps }) {
   const token = localStorage.getItem("token");
-  console.log("this", token);
+  // console.log("this", token);
 
   return (
     <Route

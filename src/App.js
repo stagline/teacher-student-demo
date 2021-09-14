@@ -3,6 +3,7 @@ import Routes from "./routes/index";
 import DataContext from "./Contexts/DataContext";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -28,7 +29,7 @@ function App() {
   }, []);
 
   const studentData = data?.response?.data?.data;
-  console.log(studentData, "<<<<<<<from app");
+  // console.log(studentData, "<<<<<<<from app");
 
   // Teacher Dashboard
 
@@ -61,7 +62,9 @@ function App() {
           </thead>
           <tbody>
             <tr>
-              <td> {u._id}</td>
+              <td>
+                <Link to={`/view-student-details/${u._id}`}>{u._id}</Link>{" "}
+              </td>
               <td>{u.name}</td>
               <td>{u.email}</td>
               <td>{u.status}</td>

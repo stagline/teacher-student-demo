@@ -47,25 +47,28 @@ function Give() {
   console.log("exam", exam);
 
   useEffect(() => {
-    if (seconds > 0) {
-      setTimeout(() => setSeconds(seconds - 1), 1000);
-    } else {
+    if (seconds === 0) {
       setSeconds(10);
+      if (question === 7) {
+        setSeconds(0);
+      }
+    } else {
+      if (seconds > 0) {
+        setTimeout(() => setSeconds(seconds - 1), 1000);
+      } else {
+        setSeconds(seconds);
+      }
     }
   }, [seconds]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("Run every 10 second!");
       if (question === 7) {
         setQuestion(7);
       } else {
         setQuestion(question + 1);
-
-        // setQuestion(question + 1);
       }
     }, 10000);
-
     return () => clearInterval(interval);
   }, [question]);
 
@@ -82,7 +85,7 @@ function Give() {
           history.push("/student");
           return;
         } else {
-          console.log("Response from Give Exam>>>", response);
+          // console.log("Response from Give Exam>>>", response);
           setData(response.data.data);
         }
       });
@@ -96,7 +99,7 @@ function Give() {
         config
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
       })
       .catch((error) => {
         console.log(error);
@@ -105,7 +108,7 @@ function Give() {
   };
 
   const handleOptionChange = (optionValue, question) => {
-    console.log("optionValue", optionValue);
+    // console.log("optionValue", optionValue);
     const data = {
       question: question,
       answer: optionValue,
@@ -125,10 +128,14 @@ function Give() {
             "Loading..."
           ) : ( */}
           <>
-            {question < 7 ? (
-              <div>You Have Time Left : {seconds}</div>
-            ) : (
-              <button onClick={submit}>Submi</button>
+            {!data.length > 0 ? null : (
+              <div>
+                {question < 7 ? (
+                  <div>You Have Time Left : {seconds}</div>
+                ) : (
+                  <button onClick={submit}>Submi</button>
+                )}
+              </div>
             )}
           </>
           {/* )} */}
@@ -136,7 +143,7 @@ function Give() {
         <div>
           {/* {console.log(value.options)} */}
           {data[question]?.options?.map((o, i) => {
-            console.log(`key2 value`, o, i);
+            // console.log(`key2 value`, o, i);
             return (
               <React.Fragment key={i}>
                 <div>
