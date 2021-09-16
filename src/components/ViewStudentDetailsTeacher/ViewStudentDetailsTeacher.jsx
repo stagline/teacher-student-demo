@@ -15,17 +15,20 @@ function ViewStudentDetailsTeacher() {
         <>
           {viewStudentData?.map((u, i) => (
             <div key={i}>
-              <p>
-                <b>ID :</b> {u._id}
-              </p>
-              <p>
-                <b>Name :</b>
-                {u.name}
-              </p>
-              <p>
-                <b>Email :</b>
-                {u.email}
-              </p>
+              <div className="card mt-4">
+                <div className="card-header">
+                  <b>Id :</b> {u._id}
+                </div>
+                <div className="card-body">
+                  <h5 className="card-title">
+                    <b>Name :</b> {u.name}
+                  </h5>
+                  <p className="card-text">
+                    <b>Email :</b> {u.email}
+                  </p>
+                </div>
+              </div>
+              <br />
               {u?.Result?.map((currElement, index) => {
                 return (
                   <div key={index}>
@@ -42,12 +45,26 @@ function ViewStudentDetailsTeacher() {
                       {JSON.stringify(currElement.score)}
                     </p>
                     <p>
+                      <b>Rank :</b>
+                      {JSON.stringify(currElement.rank)}
+                    </p>
+                    <p>
                       <b>ResultStatus :</b>
                       {JSON.stringify(currElement.resultStatus)}
                     </p>
                     <br />
-                    <br />
-                    <br />
+                    <h1>Student Answer</h1>
+                    {currElement.studentAnswer?.map((o, i) => (
+                      <div key={i}>
+                        <div>
+                          <b>Question {i + 1}: </b> {o.question}
+                        </div>
+                        <div>
+                          <b>Answer :</b> {o.answer}
+                        </div>
+                        <br />
+                      </div>
+                    ))}
                   </div>
                 );
               })}

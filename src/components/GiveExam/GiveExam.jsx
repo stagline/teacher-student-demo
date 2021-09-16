@@ -1,68 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import useGiveExam from "./useGiveExam";
-import Radio from "@material-ui/core/Radio";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 function GiveExam() {
-  const [{ submit, data }] = useGiveExam();
-
-  const [seconds, setSeconds] = React.useState(10);
-
-  React.useEffect(() => {
-    if (seconds > 0) {
-      setTimeout(() => setSeconds(seconds - 1), 1000);
-    } else {
-      setSeconds("BOOOOM!");
-    }
-  });
-
-  const selectOption = (event, value) => {
-    if (event.target.checked) {
-      // here the radio is checked and value contains the option's value
-      console.log(event.target.value);
-    }
-  };
+  const [{ question, data, seconds, submit, handleOptionChange }] =
+    useGiveExam();
 
   return (
     <div>
-      {!data
-        ? "Loading..."
-        : data?.response?.data?.data?.length > 0 &&
-          Object.entries(data?.response?.data?.data)?.map(
-            ([key, value], index) => {
-              return (
-                <React.Fragment key={index}>
-                  <b>
-                    <p>{value.question}</p>
-                  </b>
-                  <div>
-                    {console.log(value.options)}
-                    {value?.options?.map((o, i) => {
-                      console.log(`key2 value`, o, i);
-                      return (
-                        <React.Fragment key={i}>
-                          <div>
-                            <FormControlLabel
-                              control={<Radio />}
-                              name="options"
-                              value={o}
-                              onChange={(e) => selectOption(e, o)}
-                            />
-                            {console.log(o)}
-                            <input name="options" value={o} />
-                            <br />
-                          </div>
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-                </React.Fragment>
-              );
-            }
-          )}
+      <React.Fragment>
+        <h3></h3>
+        <b>
+          {question === 7 ? null : <p>Question Number : {question + 1}</p>}
+          <br />
+          <p>{data[question]?.question}</p>
+          {/* {!question ? (
+            "Loading..."
+          ) : ( */}
+          <>
+            {!data.length > 0 ? null : (
+              <div>
+                {question < 7 ? (
+                  <div>You Have Time Left : {seconds}</div>
+                ) : (
+                  <button onClick={submit}>Submi</button>
+                )}
+              </div>
+            )}
+          </>
+          {/* )} */}
+        </b>
+        <div>
+          {/* {console.log(value.options)} */}
+          {data[question]?.options?.map((o, i) => {
+            // console.log(`key2 value`, o, i);
+            return (
+              <React.Fragment key={i}>
+                <div>
+                  <input
+                    type="radio"
+                    name="options"
+                    value={o}
+                    //   checked={exam[i]?.answer === o}
+                    onChange={(e) =>
+                      handleOptionChange(
+                        e.target.value,
+                        data[question]?.question,
+                        data[question]?._id
+                      )
+                    }
+                  />
+                  {/* {console.log("ooooo", typeof o)} */}
+                  <input name="options" value={o} />
+                  <br />
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </React.Fragment>
       <br />
-      <div>{seconds}</div>
-      <button onClick={submit}>Give Exam</button>
     </div>
   );
 }

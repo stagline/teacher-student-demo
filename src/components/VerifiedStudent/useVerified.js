@@ -62,7 +62,13 @@ function useVerified() {
         config
       )
       .then((response) => {
-        setVerified(response);
+        if (response.data.statusCode !== 200) {
+          alert(response.data.message);
+          window.location.reload(true);
+          return;
+        } else {
+          setVerified(response);
+        }
       });
   }, []);
 

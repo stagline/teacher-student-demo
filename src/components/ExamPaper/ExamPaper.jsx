@@ -8,7 +8,7 @@ function ExamPaper({ as }) {
   const history = useHistory();
   console.log(as, "<<<<<<from exam paper");
   const { _id } = useParams();
-  console.log("Id From Exam Paper>>>>>>>>>",_id);
+  console.log("Id From Exam Paper>>>>>>>>>", _id);
 
   const { config } = useContext(DataContext);
 
@@ -38,10 +38,6 @@ function ExamPaper({ as }) {
     alert("You can not give exam again");
   }
   console.log(result, "<<<<<<<mai");
-
-  const giveExam = () => {
-    history.push("/student/give-exam/:_id");
-  };
 
   return (
     <div>
@@ -76,7 +72,6 @@ function ExamPaper({ as }) {
               </div>
             </div>
           ))}
-          <button onClick={giveExam}>Give Exam</button>
         </div>
       )}
     </div>

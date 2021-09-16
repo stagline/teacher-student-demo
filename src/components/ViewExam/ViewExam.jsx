@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 function ViewExam(props) {
-  console.log(props);
   const { className } = props;
 
   const [
@@ -68,8 +67,8 @@ function ViewExam(props) {
                   </td>
                   <Modal
                     isOpen={isOpen}
-                    onRequestClose={toggleModal}
-                    contentLabel="My dialog"
+                    // onRequestClose={toggleModal}
+                    contentlabel="My dialog"
                   >
                     <form onChange={handleChange} onSubmit={handleSubmit}>
                       <input type="text" name="subjectName" />

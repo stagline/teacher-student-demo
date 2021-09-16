@@ -67,7 +67,6 @@ function useViewExam() {
 
   const handleChange = (e) => {
     setName({ ...name, [e.target.name]: e.target.value });
-    console.log("handle");
   };
 
   const [modal, setModal] = useState(false);

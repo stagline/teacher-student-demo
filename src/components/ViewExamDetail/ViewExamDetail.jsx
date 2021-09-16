@@ -21,7 +21,15 @@ function ViewExamDetail() {
             <tr>
               <td> {u.question}</td>
               <td>{u.answer}</td>
-              <td>{u.options}</td>
+              <td>
+                1){u.options[0]}
+                <br />
+                2){u.options[1]}
+                <br />
+                3){u.options[2]}
+                <br />
+                4){u.options[3]}
+              </td>
             </tr>
           </tbody>
         </table>

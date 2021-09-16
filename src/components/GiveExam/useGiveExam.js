@@ -1,29 +1,50 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataContext from "../../Contexts/DataContext";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 function useGiveExam() {
-  const { config } = useContext(DataContext);
-
   const { _id } = useParams();
+  const [question, setQuestion] = useState(0);
+  // console.log("que no", question);
+  const { config } = useContext(DataContext);
+  const [data, setData] = useState([]);
+
+  const [seconds, setSeconds] = React.useState(10);
+
+  console.log("data", data);
+
+  const [exam, setExam] = useState([]);
+  console.log("exam", exam);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      setSeconds(10);
+      if (question === 7) {
+        setSeconds(0);
+      }
+    } else {
+      if (seconds > 0) {
+        setTimeout(() => setSeconds(seconds - 1), 1000);
+      } else {
+        setSeconds(seconds);
+      }
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (question === 7) {
+        setQuestion(7);
+      } else {
+        setQuestion(question + 1);
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [question]);
+
   const history = useHistory();
-
-  const [data, setData] = useState();
-  const [giveExam, setGiveExam] = useState([
-    {
-      question: "",
-      answer: "",
-      activeIndex: 0,
-    },
-  ]);
-
-  const handleChange = (e) => {
-    setGiveExam({ [e.target.name]: e.target.value });
-    console.log(giveExam);
-  };
-
   useEffect(() => {
     axios
       .get(
@@ -36,8 +57,8 @@ function useGiveExam() {
           history.push("/student");
           return;
         } else {
-          console.log("Response from Give Exam>>>", response);
-          setData({ response });
+          // console.log("Response from Give Exam>>>", response);
+          setData(response.data.data);
         }
       });
   }, []);
@@ -46,7 +67,7 @@ function useGiveExam() {
     axios
       .post(
         `https://nodejsexamination.herokuapp.com/student/giveExam?id=${_id}`,
-        giveExam,
+        exam,
         config
       )
       .then((response) => {
@@ -58,7 +79,15 @@ function useGiveExam() {
     console.log("Submit Success!");
   };
 
-  return [{ submit, data, giveExam, setGiveExam, handleChange }];
+  const handleOptionChange = (optionValue, question) => {
+    const data = {
+      question: question,
+      answer: optionValue,
+    };
+    setExam([...exam, data]);
+  };
+
+  return [{ question, data, seconds, submit, handleOptionChange }];
 }
 
 export default useGiveExam;

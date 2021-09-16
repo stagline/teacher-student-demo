@@ -4,6 +4,7 @@ import DataContext from "./Contexts/DataContext";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const token = localStorage.getItem("token");

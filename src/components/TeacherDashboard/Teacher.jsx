@@ -1,25 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import useTeacher from "./useTeacher";
 
 function Teacher() {
-  const history = useHistory();
-
-  const showStudentsData = () => {
-    history.push("/students-data");
-    // window.location.reload(false);
-  };
-
-  const createExam = () => {
-    history.push("/create-exam");
-  };
-
-  const showVerifiedStudents = () => {
-    history.push("/verified-student");
-  };
-
-  const showViewExam = () => {
-    history.push("/view-exam/:_id");
-  };
+  const [{ showStudentsData, createExam, showVerifiedStudents, showViewExam }] =
+    useTeacher();
 
   return (
     <div>
